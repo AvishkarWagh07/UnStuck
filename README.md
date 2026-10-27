@@ -2,6 +2,8 @@
 
 **One step at a time until it works.**
 
+🎬 **Demo Video:** [Watch the 9-minute UNSTUCK demo on YouTube](https://www.youtube.com/watch?v=3vdLkoxujFw)
+
 UnStuck hands you **one instruction at a time**, asks what actually happened, and decides what comes
 next from your answer. There are two ways in, and neither of them is only for computers:
 
