@@ -1,0 +1,408 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* unstuck tokens and shared classes
+   cobalt blue on warm cream, mobile first */
+
+@layer base {
+  :root {
+    --page-gutter: 1.25rem;
+    --header-height: 3.75rem;
+
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* keep anchors below the sticky header */
+    scroll-padding-top: calc(var(--header-height) + 1rem);
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    min-height: 100vh;
+    /* cream page, so overscroll shows cream not white */
+    background-color: #f8f1e4;
+    /* long pasted errors should not push the layout wide */
+    overflow-wrap: break-word;
+    /* stop a wide child scrolling the page sideways */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* visible focus ring for keyboard users */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2;
+    --tw-ring-offset-color: #f8f1e4;
+  }
+
+  /* invert the ring inside a cobalt panel */
+  .on-cobalt :focus-visible {
+    @apply ring-white;
+    --tw-ring-offset-color: #0736b8;
+  }
+
+  ::selection {
+    background: #0736b8;
+    color: #ffffff;
+  }
+}
+
+@layer components {
+  /* --- layout helpers ---------------------------------------------------- */
+
+  /* page padding, widened at larger sizes below */
+  .shell {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 78rem;
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right, 0px));
+  }
+
+  /* narrower column for text-heavy pages */
+  .shell-narrow {
+    @apply shell;
+    max-width: 56rem;
+  }
+
+  .section {
+    @apply py-12 sm:py-16;
+  }
+
+  .section-tight {
+    @apply py-8 sm:py-12;
+  }
+
+  /* --- surfaces ---------------------------------------------------------- */
+
+  .card {
+    @apply rounded-card border border-line bg-white;
+  }
+
+  /* card inside another white surface */
+  .card-inset {
+    @apply rounded-card border border-line bg-paper;
+  }
+
+  .card-lift {
+    @apply card shadow-lift;
+  }
+
+  /* cobalt panel for the splash and celebration */
+  .panel-cobalt {
+    @apply bg-accent text-white;
+  }
+
+  .rule {
+    @apply border-t border-line;
+  }
+
+  /* --- buttons ----------------------------------------------------------- */
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-pill border border-transparent
+      px-5 py-2.5 text-sm font-medium transition-colors duration-150
+      disabled:cursor-not-allowed disabled:opacity-45;
+    /* comfy touch target without bulky desktop buttons */
+    min-height: 2.75rem;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-dark;
+  }
+
+  .btn-outline {
+    @apply btn border-ink bg-transparent text-ink hover:bg-ink/5;
+  }
+
+  .btn-quiet {
+    @apply btn border-transparent bg-transparent px-3 text-ink-soft hover:bg-ink/5 hover:text-ink;
+  }
+
+  .btn-soft {
+    @apply btn bg-accent-soft text-accent hover:bg-accent-soft/70;
+  }
+
+  .btn-danger {
+    @apply btn border-danger/40 bg-transparent text-danger hover:bg-danger-soft;
+  }
+
+  /* on the cobalt panels */
+  .btn-on-blue {
+    @apply btn bg-white text-accent hover:bg-paper;
+  }
+
+  .btn-on-blue-outline {
+    @apply btn border-white/70 bg-transparent text-white hover:bg-white/10;
+  }
+
+  .btn-sm {
+    @apply px-4 py-1.5 text-xs;
+    min-height: 2.25rem;
+  }
+
+  .btn-lg {
+    @apply px-7 py-3.5 text-base;
+    min-height: 3.25rem;
+  }
+
+  .btn-block {
+    @apply w-full;
+  }
+
+  /* --- choice rows ------------------------------------------------------- */
+
+  /* full width row for outcome options and plan steps */
+  .choice {
+    @apply flex w-full items-center gap-3 rounded-card border border-line bg-white px-4 py-3.5 text-left
+      text-sm text-ink transition-colors duration-150 hover:border-accent hover:bg-accent-soft/40
+      disabled:cursor-not-allowed disabled:opacity-45;
+    min-height: 3rem;
+  }
+
+  .choice-selected {
+    @apply border-accent bg-accent-soft text-ink;
+  }
+
+  /* --- badges ------------------------------------------------------------ */
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-pill border border-line bg-paper px-2.5 py-0.5
+      text-xs font-medium text-ink-soft;
+  }
+
+  .badge-blue {
+    @apply badge border-accent/25 bg-accent-soft text-accent;
+  }
+
+  .badge-success {
+    @apply badge border-success/30 bg-success-soft text-success-ink;
+  }
+
+  .badge-amber {
+    @apply badge border-amber/30 bg-amber-soft text-amber-ink;
+  }
+
+  .badge-danger {
+    @apply badge border-danger/30 bg-danger-soft text-danger-ink;
+  }
+
+  /* --- form fields ------------------------------------------------------- */
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .field-input {
+    @apply w-full rounded-card border border-line bg-white px-4 py-3 text-base text-ink
+      placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-0
+      disabled:cursor-not-allowed disabled:bg-paper disabled:text-ink-faint;
+    /* 16px stops ios safari zooming on focus */
+    font-size: 1rem;
+  }
+
+  .field-help {
+    @apply mt-1.5 text-xs leading-relaxed text-ink-faint;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm text-danger;
+  }
+
+  /* --- text -------------------------------------------------------------- */
+
+  .lede {
+    @apply text-fluid-body text-ink-soft;
+  }
+
+  .caption {
+    @apply text-xs text-ink-faint;
+  }
+
+  .aside-note {
+    @apply font-hand text-lg text-ink-soft;
+  }
+
+  .link {
+    @apply text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent;
+  }
+
+  /* --- misc -------------------------------------------------------------- */
+
+  .skeleton {
+    @apply animate-pulse rounded-card bg-line/60;
+  }
+
+  /* hidden visually, still read by screen readers */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* step card rises in when the step changes */
+  .step-enter {
+    @apply animate-riseIn;
+  }
+}
+
+@layer utilities {
+  /* light dotted texture, splash panel only */
+  .bg-dotty {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+
+  .text-shadow-soft {
+    text-shadow: 0 1px 0 rgba(16, 38, 79, 0.25);
+  }
+}
+
+/* media queries tailwind cannot do inline
+   gutters, small phones, landscape, touch, forced colours, print */
+
+/* tighten the gutter on small phones */
+@media (max-width: 400px) {
+  :root {
+    --page-gutter: 1rem;
+  }
+
+  /* tighter letter-spacing on narrow screens */
+  h1 {
+    letter-spacing: -0.015em;
+  }
+}
+
+/* wider gutters on tablet and up */
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: 2rem;
+    --header-height: 4.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --page-gutter: 2.5rem;
+  }
+}
+
+/* more air on very wide screens */
+@media (min-width: 1800px) {
+  :root {
+    --page-gutter: 3rem;
+  }
+
+  body {
+    font-size: 1.0625rem;
+  }
+}
+
+/* landscape phones, keep the button on screen */
+@media (max-height: 560px) and (orientation: landscape) {
+  .splash-body {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* taller controls on touch devices */
+@media (pointer: coarse) {
+  .btn {
+    min-height: 3rem;
+  }
+
+  .choice {
+    min-height: 3.25rem;
+  }
+}
+
+/* respect the system reduce-motion setting, and the in-app one below */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html.reduce-motion {
+  scroll-behavior: auto;
+}
+
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* windows high contrast, borders must be real borders not shadows */
+@media (forced-colors: active) {
+  .card,
+  .card-inset,
+  .choice,
+  .btn {
+    border: 1px solid ButtonBorder;
+  }
+
+  .btn-primary,
+  .btn-on-blue {
+    border: 1px solid ButtonText;
+  }
+}
+
+/* print: drop the nav and cobalt, keep the steps */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .card,
+  .card-inset {
+    border: 1px solid #999999;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .panel-cobalt {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
